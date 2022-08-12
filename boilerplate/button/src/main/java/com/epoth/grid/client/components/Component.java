@@ -2,6 +2,8 @@ package com.epoth.grid.client.components;
 
 import elemental2.dom.*;
 import jsinterop.annotations.JsType;
+
+import static elemental2.dom.DomGlobal.console;
 import static elemental2.dom.DomGlobal.document;
 
 @JsType
@@ -10,8 +12,6 @@ public abstract class Component extends HTMLElement {
     private ShadowRoot root;
 
     private String enclosedHTML;
-
-    private HTMLTemplateElement templateElement;
 
     public Component() {
 
@@ -25,7 +25,9 @@ public abstract class Component extends HTMLElement {
 
     public void connectedCallback() {
 
-        enclosedHTML = this.innerHTML;
+        this.enclosedHTML = this.textContent;
+
+        console.log(this);
 
         root.append(render());
 

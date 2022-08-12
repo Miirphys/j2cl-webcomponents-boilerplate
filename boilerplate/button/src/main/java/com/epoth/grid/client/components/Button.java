@@ -19,8 +19,6 @@ public class Button extends Component {
 
         Element buttonElement = document.createElement("button");
 
-        buttonElement.innerHTML = getEnclosedHTML();
-
         return buttonElement;
 
     }

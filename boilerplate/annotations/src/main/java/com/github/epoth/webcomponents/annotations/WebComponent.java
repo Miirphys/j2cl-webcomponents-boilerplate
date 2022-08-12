@@ -11,6 +11,6 @@ public @interface WebComponent {
 
     String tagName();
 
-    String templateUrl();
+    String templateUrl() default "";
 
 }
