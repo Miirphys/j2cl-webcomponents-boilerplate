@@ -8,6 +8,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
@@ -16,11 +17,12 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
+import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.io.Writer;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
@@ -29,6 +31,11 @@ import java.util.Set;
 public class Generator extends AbstractProcessor {
 
     private static final String DEFINE_COMPONENT_PATTERN = "elemental2.dom.DomGlobal.customElements.define($S,$L.class)";
+    private static final String HTML_TEMPLATE_ELEMENT_CREATION = "elemental2.dom.HTMLTemplateElement $L_template = (elemental2.dom.HTMLTemplateElement) elemental2.dom.DomGlobal.document.createElement(\"template\")";
+    private static final String HTML_TEMPLATE_ELEMENT_SET_INNER = "$L_template.innerHTML=$S";
+    private static final String HTML_TEMPLATE_BIND_TO_HEAD = "elemental2.dom.DomGlobal.document.head.append($L_template)";
+
+    private static final String HTML_TEMPLATE_REGISTRY_ADD = "com.github.epoth.webcomponents.TemplateRegistry.add($S,$L_template)";
 
     private ArrayList<Component> components = new ArrayList<>();
 
@@ -83,13 +90,51 @@ public class Generator extends AbstractProcessor {
 
         /* */
 
-        CodeBlock.Builder codeBuilder = CodeBlock.builder();
+        CodeBlock.Builder createTemplateCodeBlockBuilder = CodeBlock.builder();
+
+        /* */
+
+        CodeBlock.Builder defineComponentCodeBlockBuilder = CodeBlock.builder();
+
+        StringBuilder templatePathBuilder = new StringBuilder();
+
+        /* */
 
         for (Component component : components) {
 
-            codeBuilder.addStatement(DEFINE_COMPONENT_PATTERN, component.tagName, component.className);
+            /* */
+
+            defineComponentCodeBlockBuilder.addStatement(DEFINE_COMPONENT_PATTERN, component.tagName, component.className);
+
+            String simpleClassName = getSimpleClassName(component.className);
+            String packagePath = getPackagePath(component.className);
+
+            templatePathBuilder.append(packagePath).append("/").append(component.templateUrl);
+
+            /* */
+
+            String templateContents = null;
+
+            try {
+
+                templateContents = getStringContentsOfPath(processingEnv.getFiler(), templatePathBuilder.toString()).toString();
+
+                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_ELEMENT_CREATION, simpleClassName);
+                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_ELEMENT_SET_INNER, simpleClassName, templateContents);
+                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_BIND_TO_HEAD, simpleClassName);
+                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_REGISTRY_ADD, simpleClassName, simpleClassName);
+
+            } catch (IOException ioException) {
+
+                throw new RuntimeException(ioException);
+
+            }
+
+            /* */
 
         }
+
+        classBuilder.addStaticBlock(createTemplateCodeBlockBuilder.build());
 
         /* */
 
@@ -97,8 +142,7 @@ public class Generator extends AbstractProcessor {
 
         onLoadMethodBuilder.addModifiers(Modifier.PUBLIC);
 
-        onLoadMethodBuilder.addCode(codeBuilder.build());
-
+        onLoadMethodBuilder.addCode(defineComponentCodeBlockBuilder.build());
 
         /* */
 
@@ -138,6 +182,18 @@ public class Generator extends AbstractProcessor {
 
     }
 
+    public String getSimpleClassName(String className) {
+
+        return className.substring(className.lastIndexOf('.') + 1).toLowerCase();
+
+    }
+
+    public String getPackagePath(String className) {
+
+        return className.substring(0, className.lastIndexOf('.')).replaceAll("\\.", "/");
+
+    }
+
     private void processElement(Element element) {
 
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "+ processing - " + element.toString());
@@ -158,6 +214,43 @@ public class Generator extends AbstractProcessor {
 
         }
 
+    }
+
+    private CharSequence getStringContentsOfPath(Filer filer, String path) throws IOException {
+        for (JavaFileManager.Location location : Arrays.asList(
+                StandardLocation.SOURCE_PATH,
+                StandardLocation.SOURCE_OUTPUT,
+                StandardLocation.CLASS_PATH,
+                StandardLocation.CLASS_OUTPUT,
+                StandardLocation.ANNOTATION_PROCESSOR_PATH
+        )) {
+            try {
+                FileObject resource = filer.getResource(location, "", path);
+                if (resource != null && new File(resource.getName()).exists()) {
+                    return resource.getCharContent(false);
+                }
+            } catch (IOException e) {
+                //ignore, look in the next entry
+            }
+        }
+        try (InputStream inputStream = getClass().getResourceAsStream("/" + path)) {
+            if (inputStream != null) {
+                final char[] buffer = new char[1024];
+                final StringBuilder out = new StringBuilder();
+                try (Reader in = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+                    while (true) {
+                        int rsz = in.read(buffer, 0, buffer.length);
+                        if (rsz < 0)
+                            break;
+                        out.append(buffer, 0, rsz);
+                    }
+                }
+                return out.toString();
+            }
+            throw new IllegalStateException("Failed to find resource " + path);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read resource " + path, e);
+        }
     }
 
     private static class Component {

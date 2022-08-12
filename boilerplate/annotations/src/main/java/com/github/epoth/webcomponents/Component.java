@@ -1,17 +1,16 @@
-package com.epoth.grid.client.components;
+package com.github.epoth.webcomponents;
 
-import elemental2.dom.*;
+import elemental2.dom.Element;
+import elemental2.dom.HTMLElement;
+import elemental2.dom.HTMLTemplateElement;
+import elemental2.dom.ShadowRoot;
 import jsinterop.annotations.JsType;
-
 import static elemental2.dom.DomGlobal.console;
-import static elemental2.dom.DomGlobal.document;
 
 @JsType
 public abstract class Component extends HTMLElement {
 
     private ShadowRoot root;
-
-    private String enclosedHTML;
 
     public Component() {
 
@@ -25,19 +24,15 @@ public abstract class Component extends HTMLElement {
 
     public void connectedCallback() {
 
-        this.enclosedHTML = this.textContent;
-
-        console.log(this);
-
         root.append(render());
 
     }
 
     public abstract Element render();
 
-    public String getEnclosedHTML() {
+    public HTMLTemplateElement getTemplate() {
 
-        return enclosedHTML;
+        return TemplateRegistry.get(this.getClass().getSimpleName());
 
     }
 

@@ -1,5 +1,6 @@
 package com.epoth.grid.client.components;
 
+import com.github.epoth.webcomponents.Component;
 import com.github.epoth.webcomponents.annotations.WebComponent;
 import elemental2.dom.Element;
 import jsinterop.annotations.JsType;
@@ -17,7 +18,11 @@ public class Button extends Component {
 
     public Element render() {
 
+        getTemplate();
+
         Element buttonElement = document.createElement("button");
+
+        buttonElement.innerHTML = "Click Me";
 
         return buttonElement;
 
