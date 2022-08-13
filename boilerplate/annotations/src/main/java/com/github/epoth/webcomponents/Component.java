@@ -6,12 +6,14 @@ import elemental2.dom.HTMLTemplateElement;
 import elemental2.dom.ShadowRoot;
 import jsinterop.annotations.JsType;
 
+import static elemental2.dom.DomGlobal.console;
 import static elemental2.dom.DomGlobal.document;
 
 @JsType
 public abstract class Component extends HTMLElement {
 
     private ShadowRoot root;
+
     public static final int SHADOWED_OPEN = 0;
     public static final int SHADOWED_CLOSED = 1;
     public static final int NON_SHADOWED = 2;
@@ -46,11 +48,14 @@ public abstract class Component extends HTMLElement {
 
         HTMLTemplateElement templateElement = TemplateRegistry.get(this.getClass().getSimpleName().toLowerCase());
 
+        ComponentBinder binder = BinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
+
         if (templateElement != null) {
 
             if (root != null) {
 
                 root.append(templateElement.content.cloneNode(true));
+
 
             } else {
 
@@ -69,8 +74,13 @@ public abstract class Component extends HTMLElement {
                 this.append(render());
 
             }
-
         }
+
+        console.log("beforeBind...");
+
+        binder.bind(this);
+
+        console.log("afterBind...");
 
     }
 
@@ -84,6 +94,13 @@ public abstract class Component extends HTMLElement {
 
         return TemplateRegistry.get(this.getClass().getSimpleName());
 
+    }
+
+    public Element getElementById(String id) {
+
+        if (root != null) return root.getElementById(id);
+
+        return this.querySelector("#" + id);
     }
 
 }

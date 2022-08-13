@@ -1,6 +1,5 @@
 package com.github.epoth.webcomponents.generator;
 
-import com.github.epoth.webcomponents.Component;
 import com.github.epoth.webcomponents.annotations.WebComponent;
 import com.google.common.annotations.GwtIncompatible;
 import com.squareup.javapoet.CodeBlock;
@@ -20,16 +19,27 @@ import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
+import static com.github.epoth.webcomponents.generator.ClassNameUtils.getPackagePath;
+import static com.github.epoth.webcomponents.generator.ClassNameUtils.getSimpleLowerClassName;
+
 @GwtIncompatible
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class Generator extends AbstractProcessor {
+
+    private TemplateParser templateParser;
 
     private static final String DEFINE_COMPONENT_PATTERN = "elemental2.dom.DomGlobal.customElements.define($S,$L.class)";
     private static final String HTML_TEMPLATE_ELEMENT_CREATION = "elemental2.dom.HTMLTemplateElement $L_template = (elemental2.dom.HTMLTemplateElement) elemental2.dom.DomGlobal.document.createElement(\"template\")";
@@ -54,6 +64,8 @@ public class Generator extends AbstractProcessor {
             RoundEnvironment roundEnv
 
     ) {
+
+        templateParser = new TemplateParser();
 
         Set<? extends Element> classes = roundEnv.getElementsAnnotatedWith(WebComponent.class);
 
@@ -164,7 +176,7 @@ public class Generator extends AbstractProcessor {
 
             StringBuilder templatePathBuilder = new StringBuilder();
 
-            String simpleClassName = getSimpleClassName(component.className);
+            String simpleClassName = getSimpleLowerClassName(component.className);
             String packagePath = getPackagePath(component.className);
 
             templatePathBuilder.append(packagePath).append("/").append(component.templateUrl);
@@ -176,6 +188,20 @@ public class Generator extends AbstractProcessor {
             try {
 
                 templateContents = getStringContentsOfPath(processingEnv.getFiler(), templatePathBuilder.toString()).toString();
+
+                /* */
+
+                templateContents = parseTemplate(
+
+                        codeBuilder,
+
+                        component.className,
+
+                        templateContents
+
+                        );
+
+                /* */
 
                 codeBuilder.addStatement(HTML_TEMPLATE_ELEMENT_CREATION, simpleClassName);
                 codeBuilder.addStatement(HTML_TEMPLATE_ELEMENT_SET_INNER, simpleClassName, templateContents);
@@ -190,18 +216,35 @@ public class Generator extends AbstractProcessor {
 
         }
 
-
     }
 
-    public String getSimpleClassName(String className) {
+    private String parseTemplate(
 
-        return className.substring(className.lastIndexOf('.') + 1).toLowerCase();
+            CodeBlock.Builder codeBuilder,
 
-    }
+            String className,
 
-    public String getPackagePath(String className) {
+            String templateContents
 
-        return className.substring(0, className.lastIndexOf('.')).replaceAll("\\.", "/");
+    ) throws IOException {
+
+        TemplateParser.TemplateParserResult result = templateParser.parse(processingEnv, templateContents);
+
+        TemplateBindingsGenerator generator = new TemplateBindingsGenerator();
+
+        generator.generate(
+
+                processingEnv,
+
+                className,
+
+                result.bindingList,
+
+                codeBuilder
+
+        );
+
+        return result.parserOutput;
 
     }
 
@@ -228,13 +271,7 @@ public class Generator extends AbstractProcessor {
     }
 
     private CharSequence getStringContentsOfPath(Filer filer, String path) throws IOException {
-        for (JavaFileManager.Location location : Arrays.asList(
-                StandardLocation.SOURCE_PATH,
-                StandardLocation.SOURCE_OUTPUT,
-                StandardLocation.CLASS_PATH,
-                StandardLocation.CLASS_OUTPUT,
-                StandardLocation.ANNOTATION_PROCESSOR_PATH
-        )) {
+        for (JavaFileManager.Location location : Arrays.asList(StandardLocation.SOURCE_PATH, StandardLocation.SOURCE_OUTPUT, StandardLocation.CLASS_PATH, StandardLocation.CLASS_OUTPUT, StandardLocation.ANNOTATION_PROCESSOR_PATH)) {
             try {
                 FileObject resource = filer.getResource(location, "", path);
                 if (resource != null && new File(resource.getName()).exists()) {
@@ -251,8 +288,7 @@ public class Generator extends AbstractProcessor {
                 try (Reader in = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
                     while (true) {
                         int rsz = in.read(buffer, 0, buffer.length);
-                        if (rsz < 0)
-                            break;
+                        if (rsz < 0) break;
                         out.append(buffer, 0, rsz);
                     }
                 }
