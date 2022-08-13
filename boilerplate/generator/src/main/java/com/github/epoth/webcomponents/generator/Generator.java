@@ -1,5 +1,6 @@
 package com.github.epoth.webcomponents.generator;
 
+import com.github.epoth.webcomponents.Component;
 import com.github.epoth.webcomponents.annotations.WebComponent;
 import com.google.common.annotations.GwtIncompatible;
 import com.squareup.javapoet.CodeBlock;
@@ -34,7 +35,6 @@ public class Generator extends AbstractProcessor {
     private static final String HTML_TEMPLATE_ELEMENT_CREATION = "elemental2.dom.HTMLTemplateElement $L_template = (elemental2.dom.HTMLTemplateElement) elemental2.dom.DomGlobal.document.createElement(\"template\")";
     private static final String HTML_TEMPLATE_ELEMENT_SET_INNER = "$L_template.innerHTML=$S";
     private static final String HTML_TEMPLATE_BIND_TO_HEAD = "elemental2.dom.DomGlobal.document.head.append($L_template)";
-
     private static final String HTML_TEMPLATE_REGISTRY_ADD = "com.github.epoth.webcomponents.TemplateRegistry.add($S,$L_template)";
 
     private ArrayList<Component> components = new ArrayList<>();
@@ -96,8 +96,6 @@ public class Generator extends AbstractProcessor {
 
         CodeBlock.Builder defineComponentCodeBlockBuilder = CodeBlock.builder();
 
-        StringBuilder templatePathBuilder = new StringBuilder();
-
         /* */
 
         for (Component component : components) {
@@ -106,29 +104,7 @@ public class Generator extends AbstractProcessor {
 
             defineComponentCodeBlockBuilder.addStatement(DEFINE_COMPONENT_PATTERN, component.tagName, component.className);
 
-            String simpleClassName = getSimpleClassName(component.className);
-            String packagePath = getPackagePath(component.className);
-
-            templatePathBuilder.append(packagePath).append("/").append(component.templateUrl);
-
-            /* */
-
-            String templateContents = null;
-
-            try {
-
-                templateContents = getStringContentsOfPath(processingEnv.getFiler(), templatePathBuilder.toString()).toString();
-
-                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_ELEMENT_CREATION, simpleClassName);
-                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_ELEMENT_SET_INNER, simpleClassName, templateContents);
-                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_BIND_TO_HEAD, simpleClassName);
-                createTemplateCodeBlockBuilder.addStatement(HTML_TEMPLATE_REGISTRY_ADD, simpleClassName, simpleClassName);
-
-            } catch (IOException ioException) {
-
-                throw new RuntimeException(ioException);
-
-            }
+            retrieveTemplate(createTemplateCodeBlockBuilder, component);
 
             /* */
 
@@ -179,6 +155,41 @@ public class Generator extends AbstractProcessor {
         /* */
 
         return true;
+
+    }
+
+    private void retrieveTemplate(CodeBlock.Builder codeBuilder, Component component) {
+
+        if (component.templateUrl != null || component.templateUrl.trim().equals("")) {
+
+            StringBuilder templatePathBuilder = new StringBuilder();
+
+            String simpleClassName = getSimpleClassName(component.className);
+            String packagePath = getPackagePath(component.className);
+
+            templatePathBuilder.append(packagePath).append("/").append(component.templateUrl);
+
+            /* */
+
+            String templateContents = null;
+
+            try {
+
+                templateContents = getStringContentsOfPath(processingEnv.getFiler(), templatePathBuilder.toString()).toString();
+
+                codeBuilder.addStatement(HTML_TEMPLATE_ELEMENT_CREATION, simpleClassName);
+                codeBuilder.addStatement(HTML_TEMPLATE_ELEMENT_SET_INNER, simpleClassName, templateContents);
+                codeBuilder.addStatement(HTML_TEMPLATE_BIND_TO_HEAD, simpleClassName);
+                codeBuilder.addStatement(HTML_TEMPLATE_REGISTRY_ADD, simpleClassName, simpleClassName);
+
+            } catch (IOException ioException) {
+
+                throw new RuntimeException(ioException);
+
+            }
+
+        }
+
 
     }
 

@@ -1,10 +1,25 @@
 <!doctype html>
 <html>
 <head>
-   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-   <script language="javascript" src="button.js"></script>
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.css" rel="stylesheet">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script language="javascript" src="button.js"></script>
+    <style>
+        section {
+        background: transparent;
+        color: white;
+        border-radius: 1em;
+        padding: 1em;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%) }
+    </style>
 </head>
 <body>
-   <m-button text="TEST"></m-button>
+<section>
+<m-button></m-button>
+</section>
 </body>
 </html>

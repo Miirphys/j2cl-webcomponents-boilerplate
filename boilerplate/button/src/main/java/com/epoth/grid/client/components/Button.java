@@ -2,10 +2,10 @@ package com.epoth.grid.client.components;
 
 import com.github.epoth.webcomponents.Component;
 import com.github.epoth.webcomponents.annotations.WebComponent;
-import elemental2.dom.Element;
+import elemental2.dom.Event;
 import jsinterop.annotations.JsType;
 
-import static elemental2.dom.DomGlobal.document;
+import static elemental2.dom.DomGlobal.console;
 
 @JsType
 @WebComponent(
@@ -14,17 +14,15 @@ import static elemental2.dom.DomGlobal.document;
 )
 public class Button extends Component {
 
-    public static final String TAGNAME = "m-button";
+    public Button() {
 
-    public Element render() {
+        super(Component.NON_SHADOWED);
 
-        getTemplate();
+    }
 
-        Element buttonElement = document.createElement("button");
+    public void onClick(Event ev) {
 
-        buttonElement.innerHTML = "Click Me";
-
-        return buttonElement;
+        console.log("click");
 
     }
 
