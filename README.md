@@ -12,7 +12,7 @@ and
 
 @see https://github.com/eponthiaux/j2cl-webcomponents-boilerplate/blob/main/boilerplate/button/src/main/java/com/github/epoth/client/components/Button.html
 
-Event binding beetween template and component are enterily generated .
+Event binding beetween template and component are entirely generated .
 
 
 
