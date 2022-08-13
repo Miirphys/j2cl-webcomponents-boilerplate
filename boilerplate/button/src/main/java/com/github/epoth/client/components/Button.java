@@ -1,4 +1,4 @@
-package com.epoth.grid.client.components;
+package com.github.epoth.client.components;
 
 import com.github.epoth.webcomponents.Component;
 import com.github.epoth.webcomponents.annotations.WebComponent;
