@@ -59,14 +59,14 @@ public class Generator extends AbstractProcessor {
     private static final String HTML_TEMPLATE_ELEMENT_CREATION = "elemental2.dom.HTMLTemplateElement $L_template = (elemental2.dom.HTMLTemplateElement) elemental2.dom.DomGlobal.document.createElement(\"template\")";
     private static final String HTML_TEMPLATE_ELEMENT_SET_INNER = "$L_template.innerHTML=$S";
     private static final String HTML_TEMPLATE_BIND_TO_HEAD = "elemental2.dom.DomGlobal.document.head.append($L_template)";
-    private static final String HTML_TEMPLATE_REGISTRY_ADD = "com.github.epoth.webcomponents.TemplateRegistry.add($S,$L_template)";
+    private static final String HTML_TEMPLATE_REGISTRY_ADD = "com.github.epoth.boilerplate.TemplateRegistry.add($S,$L_template)";
     private TemplateParser templateParser;
     private ArrayList<Component> components = new ArrayList<>();
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
 
-        return Collections.singleton("com.github.epoth.webcomponents.annotations.WebComponent");
+        return Collections.singleton("com.github.epoth.boilerplate.annotations.WebComponent");
 
     }
 

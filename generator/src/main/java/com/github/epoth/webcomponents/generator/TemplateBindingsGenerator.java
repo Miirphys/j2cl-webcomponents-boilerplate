@@ -145,7 +145,7 @@ public class TemplateBindingsGenerator {
 
         codeBuilder.addStatement(
 
-                "com.github.epoth.webcomponents.ComponentBinderRegistry.add($S,new com.boilerplate.bind.$L())",
+                "com.github.epoth.boilerplate.ComponentBinderRegistry.add($S,new com.boilerplate.bind.$L())",
 
                 ClassNameUtils.lowerCaseClassName(className),
 

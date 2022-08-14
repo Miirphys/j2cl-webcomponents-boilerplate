@@ -24,9 +24,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface WebComponent {
-
     String tagName();
-
     String templateUrl() default "";
-
 }

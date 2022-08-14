@@ -1,9 +1,10 @@
-package com.github.epoth.client.components;
+package com.github.epoth.client.components.button;
 
 import com.github.epoth.boilerplate.Component;
 import com.github.epoth.boilerplate.annotations.WebComponent;
 import elemental2.dom.Event;
 import elemental2.dom.HTMLElement;
+import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
 import static elemental2.dom.DomGlobal.console;
@@ -49,7 +50,9 @@ public class Button extends Component {
 
     public void onClick(Event ev) {
 
-        console.log("Button::click");
+        // in the case of a component without shadow , the parent tag is the parentElement
+
+        this.parentElement.onclick.onInvoke(ev);
 
     }
 
