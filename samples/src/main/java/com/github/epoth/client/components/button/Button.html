@@ -2,7 +2,8 @@
     <button @click="onClick" class="mdc-button mdc-button--touch">
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__touch"></span>
-        <span @field="label" class="mdc-button__label">
+        <span @field="label" class="mdc-button__label" >
+            <slot select="label"></slot>
         </span>
     </button>
 </div>

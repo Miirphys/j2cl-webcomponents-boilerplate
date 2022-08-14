@@ -28,19 +28,16 @@ import static elemental2.dom.DomGlobal.document;
 @JsType
 public abstract class Component extends HTMLElement {
 
-    public static final int SHADOWED_OPEN = 0;
-    public static final int SHADOWED_CLOSED = 1;
+    public static final int OPEN = 0;
+    public static final int CLOSED = 1;
     public static final int NON_SHADOWED = 2;
     private ShadowRoot root;
-    private String tagContents;
 
     public Component(final int MODE) {
 
-        tagContents = this.textContent;
-
         switch (MODE) {
 
-            case SHADOWED_OPEN:
+            case OPEN:
 
                 AttachShadowOptionsType openOptions = AttachShadowOptionsType.create();
 
@@ -50,17 +47,15 @@ public abstract class Component extends HTMLElement {
 
                 break;
 
-            case SHADOWED_CLOSED:
+            case CLOSED:
 
                 AttachShadowOptionsType closedOptions = AttachShadowOptionsType.create();
 
-                closedOptions.setMode("close");
+                closedOptions.setMode("closed");
 
                 root = attachShadow(closedOptions);
 
         }
-
-        initialize();
 
     }
 
@@ -101,7 +96,13 @@ public abstract class Component extends HTMLElement {
 
     public void connectedCallback() {
 
+        initialize();
+
+        onConnect();
+
     }
+
+    public void onConnect(){}
 
     public Element render() {
 
@@ -116,8 +117,5 @@ public abstract class Component extends HTMLElement {
         return this.querySelector("#" + id);
     }
 
-    public String getTagContents() {
-        return tagContents;
-    }
 
 }

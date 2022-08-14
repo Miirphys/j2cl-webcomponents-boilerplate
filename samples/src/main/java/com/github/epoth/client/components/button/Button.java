@@ -4,10 +4,7 @@ import com.github.epoth.boilerplate.Component;
 import com.github.epoth.boilerplate.annotations.WebComponent;
 import elemental2.dom.Event;
 import elemental2.dom.HTMLElement;
-import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
-
-import static elemental2.dom.DomGlobal.console;
 
 
 /**
@@ -37,14 +34,12 @@ public class Button extends Component {
 
     public Button() {
 
-        super(Component.NON_SHADOWED);
+        super(Component.OPEN);
 
     }
 
     @Override
-    public void connectedCallback() {
-
-        label.innerHTML = getTagContents();
+    public void onConnect() {
 
     }
 
@@ -52,7 +47,11 @@ public class Button extends Component {
 
         // in the case of a component without shadow , the parent tag is the parentElement
 
-        this.parentElement.onclick.onInvoke(ev);
+        if (this.parentElement.getAttribute("onclick") != null) {
+
+            this.parentElement.onclick.onInvoke(ev);
+
+        }
 
     }
 
