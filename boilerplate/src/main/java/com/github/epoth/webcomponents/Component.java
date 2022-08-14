@@ -64,7 +64,7 @@ public abstract class Component extends HTMLElement {
 
         HTMLTemplateElement templateElement = TemplateRegistry.get(this.getClass().getSimpleName().toLowerCase());
 
-        ComponentBinder binder = BinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
+        ComponentBinder binder = ComponentBinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
 
         if (templateElement != null) {
 

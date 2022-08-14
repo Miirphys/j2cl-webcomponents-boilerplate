@@ -3,7 +3,6 @@ package com.github.epoth.webcomponents;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Copyright 2022 Eric Ponthiaux -/- ponthiaux.eric@gmail.com
  * <p>
@@ -20,7 +19,7 @@ import java.util.Map;
  * limitations under the License.
  */
 
-public class BinderRegistry {
+public class ComponentBinderRegistry {
 
     private static Map<String, ComponentBinder> registry = new HashMap<>();
 

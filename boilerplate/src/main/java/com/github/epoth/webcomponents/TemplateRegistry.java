@@ -22,6 +22,7 @@ import java.util.Map;
  */
 
 public class TemplateRegistry {
+
     private static Map<String, HTMLTemplateElement> registry = new HashMap<>();
 
     public static void add(String key, HTMLTemplateElement htmlTemplateElement) {

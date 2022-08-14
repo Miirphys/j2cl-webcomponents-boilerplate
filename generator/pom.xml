@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.epoth.webcomponents</groupId>
-        <artifactId>boilerplate</artifactId>
+        <groupId>com.github.epoth</groupId>
+        <artifactId>webcomponents</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -15,21 +15,36 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
-    <artifactId>annotations</artifactId>
+    <artifactId>generator</artifactId>
     <version>${project.parent.version}</version>
     <packaging>jar</packaging>
-
-    <name>annotations</name>
+    <name>generator</name>
 
     <dependencies>
         <dependency>
             <groupId>com.google.elemental2</groupId>
             <artifactId>elemental2-dom</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auto</groupId>
+            <artifactId>auto-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.epoth</groupId>
+            <artifactId>boilerplate</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -39,16 +54,6 @@
                 </configuration>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-        </resources>
-
     </build>
 
 </project>
