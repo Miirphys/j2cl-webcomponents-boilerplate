@@ -36,9 +36,14 @@ public class TemplateParser {
     private static final String ID = "id";
     private static String[] eventsAttributes;
 
+    private static String[] componentAttributes;
+
+
     static {
 
         eventsAttributes = new String[]{"@afterprint", "@beforeprint", "@beforeunload", "@error", "@hashchange", "@load", "@message", "@offline", "@online", "@pagehide", "@pageshow", "@popstate", "@resize", "@storage", "@unload", "@blur", "@change", "@contextmenu", "@focus", "@input", "@invalid", "@reset", "@search", "@select", "@submit", "@keydown", "@keypress", "@keyup", "@click", "@dblclick", "@mousedown", "@mousemove", "@mouseout", "@mouseover", "@mouseup", "@mousewheel", "@wheel", "@drag", "@dragend", "@dragenter", "@dragleave", "@dragover", "@dragstart", "@drop", "@scroll", "@copy", "@cut", "@paste", "@abort", "@canplay", "@canplaythrough", "@cuechange", "@durationchange", "@emptied", "@ended", "@error", "@loadeddata", "@loadedmetadata", "@loadstart", "@pause", "@play", "@playing", "@progress", "@ratechange", "@seeked", "@seeking", "@stalled", "@suspend", "@timeupdate", "@volumechange", "@waiting", "@toggle"};
+
+        componentAttributes = new String[]{"@field"};
 
     }
 
@@ -56,11 +61,59 @@ public class TemplateParser {
 
         Document document = Jsoup.parse(templateContents);
 
-        for (String attributeName : eventsAttributes) {
+        for (String componentAttributeName : componentAttributes) {
 
-            Elements elements = document.select("[" + attributeName + "]");
+            Elements elements = document.select("[" + componentAttributeName + "]");
 
-            if (elements.size() != 0) {
+            if (!elements.isEmpty()) {
+
+                for (Element element : elements) {
+
+                    TemplateBinding templateBinding = new TemplateBinding(TemplateBinding.FIELD);
+
+                    /* */
+
+                    String id = null;
+
+                    if (element.attr(ID) != null && !element.attr(ID).trim().equals("")) {
+
+                        id = element.attr(ID);
+
+                    } else {
+
+                        // If using HTML4 ids must start with a letter
+
+                        id = Base64
+                                .getEncoder()
+                                .encodeToString(("" + (identifierCount++))
+                                        .getBytes(StandardCharsets.UTF_8))
+                                .replaceAll("=", "");
+
+                        element.attr(ID, id);
+
+                    }
+
+                    /* */
+
+                    templateBinding.setId(id);
+                    templateBinding.setField(element.attr(componentAttributeName));
+
+                    result.bindingList.add(templateBinding);
+
+                    element.removeAttr(componentAttributeName);
+
+                }
+
+            }
+
+
+        }
+
+        for (String eventAttributeName : eventsAttributes) {
+
+            Elements elements = document.select("[" + eventAttributeName + "]");
+
+            if (!elements.isEmpty()) {
 
                 for (Element element : elements) {
 
@@ -76,7 +129,7 @@ public class TemplateParser {
 
                     } else {
 
-                        //If using HTML4 ids must start with a letter
+                        // If using HTML4 ids must start with a letter
 
                         id = Base64
                                 .getEncoder()
@@ -91,8 +144,8 @@ public class TemplateParser {
                     /* */
 
                     templateBinding.setId(id);
-                    templateBinding.setEvent(attributeName.substring(1));
-                    templateBinding.setFunction(element.attr(attributeName));
+                    templateBinding.setEvent(eventAttributeName.substring(1));
+                    templateBinding.setFunction(element.attr(eventAttributeName));
 
                     result.bindingList.add(templateBinding);
 
@@ -104,7 +157,7 @@ public class TemplateParser {
 
                     /* */
 
-                    element.removeAttr(attributeName);
+                    element.removeAttr(eventAttributeName);
 
                 }
 

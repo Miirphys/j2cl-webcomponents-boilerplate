@@ -3,6 +3,7 @@ package com.github.epoth.client.components;
 import com.github.epoth.webcomponents.Component;
 import com.github.epoth.webcomponents.annotations.WebComponent;
 import elemental2.dom.Event;
+import elemental2.dom.HTMLElement;
 import jsinterop.annotations.JsType;
 
 import static elemental2.dom.DomGlobal.console;
@@ -31,15 +32,24 @@ import static elemental2.dom.DomGlobal.console;
 )
 public class Button extends Component {
 
+    public HTMLElement label;
+
     public Button() {
 
         super(Component.NON_SHADOWED);
 
     }
 
+    @Override
+    public void connectedCallback() {
+
+        label.innerHTML = getTagContents();
+
+    }
+
     public void onClick(Event ev) {
 
-        console.log("click");
+        console.log("Button::click");
 
     }
 

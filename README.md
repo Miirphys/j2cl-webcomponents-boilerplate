@@ -1,6 +1,5 @@
 Simple boilerplate for webcomponents with the j2cl compiler . 
 
-
 Here is my attempt to make a very simple boilerplate to implements WebComponents using the google j2cl compiler .
 
 Each template can be declared externaly as a simple HTML file and linked to the right component using the @WebComponent 

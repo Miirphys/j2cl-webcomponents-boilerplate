@@ -207,6 +207,8 @@ public class Generator extends AbstractProcessor {
 
                 templateContents = parseTemplate(
 
+                        component.getClassElement(),
+
                         codeBuilder,
 
                         component.className,
@@ -234,6 +236,8 @@ public class Generator extends AbstractProcessor {
 
     private String parseTemplate(
 
+            Element classElement,
+
             CodeBlock.Builder codeBuilder,
 
             String className,
@@ -249,6 +253,8 @@ public class Generator extends AbstractProcessor {
         generator.generate(
 
                 processingEnv,
+
+                classElement,
 
                 className,
 
@@ -271,6 +277,8 @@ public class Generator extends AbstractProcessor {
         if (component.tagName() != null) {
 
             Component comp = new Component();
+
+            comp.setClassElement(element);
 
             comp.setTagName(component.tagName());
             comp.setTemplateUrl(component.templateUrl());
@@ -316,6 +324,8 @@ public class Generator extends AbstractProcessor {
 
     private static class Component {
 
+        private Element classElement;
+
         private String className;
 
         private String tagName;
@@ -348,6 +358,14 @@ public class Generator extends AbstractProcessor {
 
             this.className = className;
 
+        }
+
+        public Element getClassElement() {
+            return classElement;
+        }
+
+        public void setClassElement(Element classElement) {
+            this.classElement = classElement;
         }
 
         @Override

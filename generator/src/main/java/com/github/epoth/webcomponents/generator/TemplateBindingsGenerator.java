@@ -11,7 +11,9 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class TemplateBindingsGenerator {
     void generate(
 
             ProcessingEnvironment processingEnvironment,
+
+            Element classElement,
 
             String className,
 
@@ -85,6 +89,28 @@ public class TemplateBindingsGenerator {
             switch (binding.getType()) {
 
                 case TemplateBinding.FIELD:
+
+                    for (Element element : classElement.getEnclosedElements()) {
+
+                        if (element.toString().equals(binding.getField())) {
+
+                            bindMethodContentBuilder.addStatement(
+
+                                    "cp.$L = ($L) cp.getElementById($S)",
+
+                                    binding.getField(),
+
+                                    "" + element.asType(),
+
+                                    binding.getId()
+
+                            );
+
+                            break;
+
+                        }
+
+                    }
 
                     break;
 

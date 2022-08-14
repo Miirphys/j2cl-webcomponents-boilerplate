@@ -1,9 +1,8 @@
 <div class="mdc-touch-target-wrapper">
-    <button @click="onClick" @field="button" class="mdc-button mdc-button--touch">
+    <button @click="onClick" class="mdc-button mdc-button--touch">
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__touch"></span>
-        <span class="mdc-button__label">
-            My accessible button
+        <span @field="label" class="mdc-button__label">
         </span>
     </button>
 </div>

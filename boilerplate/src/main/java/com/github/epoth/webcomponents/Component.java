@@ -33,8 +33,11 @@ public abstract class Component extends HTMLElement {
     public static final int SHADOWED_CLOSED = 1;
     public static final int NON_SHADOWED = 2;
     private ShadowRoot root;
+    private String tagContents;
 
     public Component(final int MODE) {
+
+        tagContents = this.textContent;
 
         switch (MODE) {
 
@@ -58,20 +61,19 @@ public abstract class Component extends HTMLElement {
 
         }
 
+        initialize();
+
     }
 
-    public void connectedCallback() {
+    private void initialize(){
 
         HTMLTemplateElement templateElement = TemplateRegistry.get(this.getClass().getSimpleName().toLowerCase());
-
-        ComponentBinder binder = ComponentBinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
 
         if (templateElement != null) {
 
             if (root != null) {
 
                 root.append(templateElement.content.cloneNode(true));
-
 
             } else {
 
@@ -92,11 +94,13 @@ public abstract class Component extends HTMLElement {
             }
         }
 
-        console.log("beforeBind...");
+        ComponentBinder binder = ComponentBinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
 
         binder.bind(this);
 
-        console.log("afterBind...");
+    }
+
+    public void connectedCallback() {
 
     }
 
@@ -106,17 +110,15 @@ public abstract class Component extends HTMLElement {
 
     }
 
-    private HTMLTemplateElement getTemplate() {
-
-        return TemplateRegistry.get(this.getClass().getSimpleName());
-
-    }
-
-    public Element getElementById(String id) {
+    public final Element getElementById(String id) {
 
         if (root != null) return root.getElementById(id);
 
         return this.querySelector("#" + id);
+    }
+
+    public String getTagContents() {
+        return tagContents;
     }
 
 }
