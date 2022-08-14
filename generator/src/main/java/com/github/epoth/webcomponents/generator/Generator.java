@@ -1,6 +1,6 @@
 package com.github.epoth.webcomponents.generator;
 
-import com.github.epoth.webcomponents.annotations.WebComponent;
+import com.github.epoth.boilerplate.annotations.WebComponent;
 import com.google.common.annotations.GwtIncompatible;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
@@ -32,8 +32,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.github.epoth.webcomponents.generator.ClassNameUtils.getPackagePath;
-import static com.github.epoth.webcomponents.generator.ClassNameUtils.getSimpleLowerClassName;
+import static com.github.epoth.webcomponents.generator.ClassNameUtils.packagePath;
+import static com.github.epoth.webcomponents.generator.ClassNameUtils.lowerCaseClassName;
 
 
 /**
@@ -190,8 +190,8 @@ public class Generator extends AbstractProcessor {
 
             StringBuilder templatePathBuilder = new StringBuilder();
 
-            String simpleClassName = getSimpleLowerClassName(component.className);
-            String packagePath = getPackagePath(component.className);
+            String simpleClassName = lowerCaseClassName(component.className);
+            String packagePath = packagePath(component.className);
 
             templatePathBuilder.append(packagePath).append("/").append(component.templateUrl);
 

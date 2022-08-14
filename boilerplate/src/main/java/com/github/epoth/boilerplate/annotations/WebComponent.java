@@ -1,9 +1,10 @@
-package com.github.epoth.webcomponents;
+package com.github.epoth.boilerplate.annotations;
 
-import elemental2.dom.HTMLTemplateElement;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Copyright 2022 Eric Ponthiaux -/- ponthiaux.eric@gmail.com
@@ -20,21 +21,12 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface WebComponent {
 
-public class TemplateRegistry {
+    String tagName();
 
-    private static Map<String, HTMLTemplateElement> registry = new HashMap<>();
-
-    public static void add(String key, HTMLTemplateElement htmlTemplateElement) {
-
-        registry.put(key, htmlTemplateElement);
-
-    }
-
-    public static HTMLTemplateElement get(String key) {
-
-        return registry.get(key);
-
-    }
+    String templateUrl() default "";
 
 }

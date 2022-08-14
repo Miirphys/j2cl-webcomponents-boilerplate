@@ -1,8 +1,8 @@
 package com.github.epoth.webcomponents.generator;
 
-import com.github.epoth.webcomponents.Component;
-import com.github.epoth.webcomponents.ComponentBinder;
-import com.github.epoth.webcomponents.TemplateBinding;
+import com.github.epoth.boilerplate.Component;
+import com.github.epoth.boilerplate.ComponentBinder;
+import com.github.epoth.boilerplate.TemplateBinding;
 import com.google.common.annotations.GwtIncompatible;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
@@ -13,7 +13,6 @@ import com.squareup.javapoet.TypeSpec;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class TemplateBindingsGenerator {
     ) throws IOException {
 
 
-        String simpleClassName = ClassNameUtils.getSimpleClassName(className);
+        String simpleClassName = ClassNameUtils.simpleClassName(className);
 
         /* */
 
@@ -148,7 +147,7 @@ public class TemplateBindingsGenerator {
 
                 "com.github.epoth.webcomponents.ComponentBinderRegistry.add($S,new com.boilerplate.bind.$L())",
 
-                ClassNameUtils.getSimpleLowerClassName(className),
+                ClassNameUtils.lowerCaseClassName(className),
 
                 classNameBuilder.toString()
 

@@ -1,4 +1,4 @@
-package com.github.epoth.webcomponents;
+package com.github.epoth.boilerplate;
 
 /**
  * Copyright 2022 Eric Ponthiaux -/- ponthiaux.eric@gmail.com

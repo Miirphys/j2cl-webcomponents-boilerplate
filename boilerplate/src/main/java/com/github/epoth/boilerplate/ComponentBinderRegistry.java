@@ -1,4 +1,4 @@
-package com.github.epoth.webcomponents;
+package com.github.epoth.boilerplate;
 
 import java.util.HashMap;
 import java.util.Map;

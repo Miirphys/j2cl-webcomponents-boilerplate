@@ -1,4 +1,4 @@
-package com.github.epoth.webcomponents;
+package com.github.epoth.boilerplate;
 
 import elemental2.dom.Element;
 import elemental2.dom.HTMLElement;
@@ -6,7 +6,6 @@ import elemental2.dom.HTMLTemplateElement;
 import elemental2.dom.ShadowRoot;
 import jsinterop.annotations.JsType;
 
-import static elemental2.dom.DomGlobal.console;
 import static elemental2.dom.DomGlobal.document;
 
 

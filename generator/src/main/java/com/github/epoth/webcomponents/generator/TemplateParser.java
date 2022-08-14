@@ -1,6 +1,6 @@
 package com.github.epoth.webcomponents.generator;
 
-import com.github.epoth.webcomponents.TemplateBinding;
+import com.github.epoth.boilerplate.TemplateBinding;
 import com.google.common.annotations.GwtIncompatible;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,9 +35,7 @@ public class TemplateParser {
 
     private static final String ID = "id";
     private static String[] eventsAttributes;
-
     private static String[] componentAttributes;
-
 
     static {
 

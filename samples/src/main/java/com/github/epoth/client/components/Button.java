@@ -1,7 +1,7 @@
 package com.github.epoth.client.components;
 
-import com.github.epoth.webcomponents.Component;
-import com.github.epoth.webcomponents.annotations.WebComponent;
+import com.github.epoth.boilerplate.Component;
+import com.github.epoth.boilerplate.annotations.WebComponent;
 import elemental2.dom.Event;
 import elemental2.dom.HTMLElement;
 import jsinterop.annotations.JsType;
