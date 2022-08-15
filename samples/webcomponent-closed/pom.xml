@@ -56,6 +56,8 @@
                             <goal>build</goal>
                         </goals>
                         <configuration>
+                            <initialScriptFilename>${project.artifactId}/components.js</initialScriptFilename>
+                            <gwt3BuildCacheDir>../gwtBuildCache</gwt3BuildCacheDir>
                             <languageOut>ECMASCRIPT6</languageOut>
                             <compilationLevel>ADVANCED</compilationLevel>
                         </configuration>
