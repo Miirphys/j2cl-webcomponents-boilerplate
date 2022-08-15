@@ -3,6 +3,7 @@ package com.github.epoth.boilerplate;
 import elemental2.dom.Element;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLTemplateElement;
+import elemental2.dom.Node;
 import elemental2.dom.ShadowRoot;
 import jsinterop.annotations.JsType;
 
@@ -60,11 +61,23 @@ public abstract class Component extends HTMLElement {
 
         }
 
-        setTimeout(o -> initialize(),0);
+        setTimeout(o -> initialize(), 0);
 
     }
 
     private void initialize() {
+
+        Node node;
+
+        if (root != null) {
+
+            node = root;
+
+        } else {
+
+            node = this;
+
+        }
 
         if (__htmlTemplateElement == null) {
 
@@ -74,27 +87,12 @@ public abstract class Component extends HTMLElement {
 
         if (__htmlTemplateElement != null) {
 
-            if (root != null) {
-
-                root.appendChild(__htmlTemplateElement.content.cloneNode(true));
-
-            } else {
-
-                this.appendChild(__htmlTemplateElement.content.cloneNode(true));
-
-            }
+            node.appendChild(__htmlTemplateElement.content.cloneNode(true));
 
         } else {
 
-            if (root != null) {
+            node.appendChild(render());
 
-                root.appendChild(render());
-
-            } else {
-
-                this.appendChild(render());
-
-            }
         }
 
         ComponentBinder binder = ComponentBinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
