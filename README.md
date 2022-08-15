@@ -7,9 +7,7 @@ of the components was not fast enough for my needs and the framework itself too 
 But today the latest webkit implementation of the webcomponents specification is lightning fast
 and does not require any framework .  
 
-I was convinced after my last tests that this technology is the direction to follow .
-
-The only question i was left with , was if I would finally bring myself
+Starting from this point , the only question i was left with , was if I would finally bring myself
 to use javascript. In fact, the latest versions of javascript are very interesting.
 But as a long time java developer, JS is still too messy for my taste ,
 even with notions of class and inheritance .
