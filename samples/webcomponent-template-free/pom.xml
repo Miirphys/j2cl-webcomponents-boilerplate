@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>webcomponent-free</artifactId>
+    <artifactId>webcomponent-template-free</artifactId>
     <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 

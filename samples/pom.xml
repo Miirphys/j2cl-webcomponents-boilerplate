@@ -23,7 +23,7 @@
     <modules>
         <module>webcomponent-closed</module>
         <module>webcomponent-open</module>
-        <module>webcomponent-free</module>
+        <module>webcomponent-template-free</module>
         <module>webcomponent-field-binding</module>
         <module>webcomponent-observed</module>
     </modules>

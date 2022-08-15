@@ -29,13 +29,14 @@ import static elemental2.dom.DomGlobal.document;
 
 @JsType
 @WebComponent(
+        mode = WebComponent.FREE,
         tagName = "m-button"
 )
 public class Button extends Component {
 
     public Button() {
 
-        super(Component.NON_SHADOWED);
+        super();
 
     }
 

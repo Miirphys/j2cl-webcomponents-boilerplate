@@ -24,6 +24,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface WebComponent {
+
+    int OPEN = 0;
+    int CLOSED = 1;
+    int FREE = 2;
+
     String tagName();
-    String templateUrl() default "";
+    String template() default "";
+
+    int mode() default CLOSED;
 }

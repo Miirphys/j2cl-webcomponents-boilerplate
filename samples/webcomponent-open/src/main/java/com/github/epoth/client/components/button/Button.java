@@ -3,7 +3,6 @@ package com.github.epoth.client.components.button;
 import com.github.epoth.boilerplate.Component;
 import com.github.epoth.boilerplate.annotations.WebComponent;
 import elemental2.dom.Event;
-import elemental2.dom.HTMLElement;
 import jsinterop.annotations.JsType;
 
 
@@ -25,14 +24,15 @@ import jsinterop.annotations.JsType;
 
 @JsType
 @WebComponent(
+        mode = WebComponent.OPEN,
         tagName = "m-button",
-        templateUrl = "Button.html"
+        template = "Button.html"
 )
 public class Button extends Component {
 
     public Button() {
 
-        super(Component.OPEN);
+        super();
 
     }
 

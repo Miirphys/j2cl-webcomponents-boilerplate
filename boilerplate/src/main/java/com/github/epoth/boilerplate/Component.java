@@ -30,38 +30,19 @@ import static elemental2.dom.DomGlobal.setTimeout;
 @JsType
 public abstract class Component extends HTMLElement {
 
-    private static HTMLTemplateElement __htmlTemplateElement;
+    /* */
 
-    private static ComponentBinder __componentBinder;
+    protected static HTMLTemplateElement __Template;
+    protected static WebComponentBinder __Binder;
+    protected static WebComponentInitializer __Initializer;
 
-    public static final int OPEN = 0;
-    public static final int CLOSED = 1;
-    public static final int NON_SHADOWED = 2;
     private ShadowRoot root;
 
-    public Component(final int MODE) {
+    /* */
 
-        switch (MODE) {
+    public Component() {
 
-            case OPEN:
-
-                AttachShadowOptionsType openOptions = AttachShadowOptionsType.create();
-
-                openOptions.setMode("open");
-
-                root = attachShadow(openOptions);
-
-                break;
-
-            case CLOSED:
-
-                AttachShadowOptionsType closedOptions = AttachShadowOptionsType.create();
-
-                closedOptions.setMode("closed");
-
-                root = attachShadow(closedOptions);
-
-        }
+        root = __Initializer.initialize(this);
 
         setTimeout(o -> initialize(), 0);
 
@@ -81,15 +62,9 @@ public abstract class Component extends HTMLElement {
 
         }
 
-        if (__htmlTemplateElement == null) {
+        if (__Template != null) {
 
-            __htmlTemplateElement = TemplateRegistry.get(this.getClass().getSimpleName().toLowerCase());
-
-        }
-
-        if (__htmlTemplateElement != null) {
-
-            node.appendChild(__htmlTemplateElement.content.cloneNode(true));
+            node.appendChild(__Template.content.cloneNode(true));
 
         } else {
 
@@ -97,15 +72,9 @@ public abstract class Component extends HTMLElement {
 
         }
 
-        if (__componentBinder == null) {
+        if (__Binder != null) {
 
-            __componentBinder = ComponentBinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
-
-        }
-
-        if (__componentBinder != null) {
-
-            __componentBinder.bind(this);
+            __Binder.bind(this);
 
         }
 

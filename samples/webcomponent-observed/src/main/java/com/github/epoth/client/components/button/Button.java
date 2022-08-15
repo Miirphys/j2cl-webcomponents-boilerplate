@@ -25,8 +25,9 @@ import jsinterop.annotations.JsType;
 
 @JsType
 @WebComponent(
+        mode = WebComponent.OPEN,
         tagName = "m-button",
-        templateUrl = "Button.html"
+        template = "Button.html"
 )
 public class Button extends Component {
 
@@ -34,7 +35,7 @@ public class Button extends Component {
 
     public Button() {
 
-        super(Component.OPEN);
+        super();
 
     }
 

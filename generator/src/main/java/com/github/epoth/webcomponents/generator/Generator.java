@@ -57,10 +57,13 @@ public class Generator extends AbstractProcessor {
     private static final String HTML_TEMPLATE_ELEMENT_CREATION = "elemental2.dom.HTMLTemplateElement $L_template = (elemental2.dom.HTMLTemplateElement) elemental2.dom.DomGlobal.document.createElement(\"template\")";
     private static final String HTML_TEMPLATE_ELEMENT_SET_INNER = "$L_template.innerHTML=$S";
     private static final String HTML_TEMPLATE_BIND_TO_HEAD = "elemental2.dom.DomGlobal.document.head.append($L_template)";
-    private static final String HTML_TEMPLATE_REGISTRY_ADD = "com.github.epoth.boilerplate.TemplateRegistry.add($S,$L_template)";
+    private static final String HTML_TEMPLATE_SET_TO_CLASS = "$L.__Template = $L_template";
 
-    private TemplateParser templateParser;
-    private ArrayList<Component> components = new ArrayList<>();
+    private HTMLTemplateParser templateParser;
+
+    private WebComponentInitializerGenerator componentInitializerGenerator;
+
+    private ArrayList<ComponentDefinition> components = new ArrayList<>();
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
@@ -78,7 +81,9 @@ public class Generator extends AbstractProcessor {
 
     ) {
 
-        templateParser = new TemplateParser();
+        templateParser = new HTMLTemplateParser();
+
+        componentInitializerGenerator = new WebComponentInitializerGenerator();
 
         Set<? extends Element> classes = roundEnv.getElementsAnnotatedWith(WebComponent.class);
 
@@ -113,7 +118,7 @@ public class Generator extends AbstractProcessor {
 
         /* */
 
-        CodeBlock.Builder createTemplateCodeBlockBuilder = CodeBlock.builder();
+        CodeBlock.Builder staticCodeBlockBuilder = CodeBlock.builder();
 
         /* */
 
@@ -121,19 +126,37 @@ public class Generator extends AbstractProcessor {
 
         /* */
 
-        for (Component component : components) {
+        for (ComponentDefinition component : components) {
 
             /* */
 
-            defineComponentCodeBlockBuilder.addStatement(DEFINE_COMPONENT_PATTERN, component.tagName, component.className);
+            defineComponentCodeBlockBuilder.addStatement(DEFINE_COMPONENT_PATTERN, component.getTagName(), component.getClassName());
 
-            retrieveTemplate(createTemplateCodeBlockBuilder, component);
+            try {
+
+                componentInitializerGenerator.generate(
+
+                        processingEnv,
+
+                        component,
+
+                        staticCodeBlockBuilder
+
+                );
+
+            } catch (IOException ioException) {
+
+                throw new RuntimeException(ioException);
+
+            }
+
+            retrieveTemplate(staticCodeBlockBuilder, component);
 
             /* */
 
         }
 
-        classBuilder.addStaticBlock(createTemplateCodeBlockBuilder.build());
+        classBuilder.addStaticBlock(staticCodeBlockBuilder.build());
 
         /* */
 
@@ -147,7 +170,7 @@ public class Generator extends AbstractProcessor {
 
         classBuilder.addMethod(onLoadMethodBuilder.build());
 
-        JavaFile javaFile = JavaFile.builder("com.boilerplate.boot", classBuilder.build()).build();
+        JavaFile javaFile = JavaFile.builder("com.github.epoth.boilerplate", classBuilder.build()).build();
 
         try {
 
@@ -157,7 +180,7 @@ public class Generator extends AbstractProcessor {
 
                     StandardLocation.SOURCE_OUTPUT,
 
-                    "", "com/boilerplate/boot/Boot.native.js"
+                    "", "com/github/epoth/boilerplate/Boot.native.js"
 
             );
 
@@ -181,16 +204,16 @@ public class Generator extends AbstractProcessor {
 
     }
 
-    private void retrieveTemplate(CodeBlock.Builder codeBuilder, Component component) {
+    private void retrieveTemplate(CodeBlock.Builder codeBuilder, ComponentDefinition component) {
 
-        if (component.templateUrl != null && !component.templateUrl.trim().equals("")) {
+        if (component.getTemplateUrl() != null && !component.getTemplateUrl().trim().equals("")) {
 
             StringBuilder templatePathBuilder = new StringBuilder();
 
-            String simpleClassName = lowerCaseClassName(component.className);
-            String packagePath = packagePath(component.className);
+            String simpleClassName = lowerCaseClassName(component.getClassName());
+            String packagePath = packagePath(component.getClassName());
 
-            templatePathBuilder.append(packagePath).append("/").append(component.templateUrl);
+            templatePathBuilder.append(packagePath).append("/").append(component.getTemplateUrl());
 
             /* */
 
@@ -208,7 +231,7 @@ public class Generator extends AbstractProcessor {
 
                         codeBuilder,
 
-                        component.className,
+                        component.getClassName(),
 
                         templateContents
 
@@ -219,7 +242,7 @@ public class Generator extends AbstractProcessor {
                 codeBuilder.addStatement(HTML_TEMPLATE_ELEMENT_CREATION, simpleClassName);
                 codeBuilder.addStatement(HTML_TEMPLATE_ELEMENT_SET_INNER, simpleClassName, templateContents);
                 codeBuilder.addStatement(HTML_TEMPLATE_BIND_TO_HEAD, simpleClassName);
-                codeBuilder.addStatement(HTML_TEMPLATE_REGISTRY_ADD, simpleClassName, simpleClassName);
+                codeBuilder.addStatement(HTML_TEMPLATE_SET_TO_CLASS, component.getClassName(), simpleClassName);
 
             } catch (IOException ioException) {
 
@@ -243,9 +266,9 @@ public class Generator extends AbstractProcessor {
 
     ) throws IOException {
 
-        TemplateParser.TemplateParserResult result = templateParser.parse(processingEnv, templateContents);
+        HTMLTemplateParser.TemplateParserResult result = templateParser.parse(processingEnv, templateContents);
 
-        TemplateBindingsGenerator generator = new TemplateBindingsGenerator();
+        WebComponentBinderGenerator generator = new WebComponentBinderGenerator();
 
         generator.generate(
 
@@ -273,12 +296,12 @@ public class Generator extends AbstractProcessor {
 
         if (component.tagName() != null) {
 
-            Component comp = new Component();
+            ComponentDefinition comp = new ComponentDefinition();
 
             comp.setClassElement(element);
-
+            comp.setMode(component.mode());
             comp.setTagName(component.tagName());
-            comp.setTemplateUrl(component.templateUrl());
+            comp.setTemplateUrl(component.template());
             comp.setClassName(element.toString());
 
             processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "+ extracting - " + comp.toString());
@@ -294,7 +317,7 @@ public class Generator extends AbstractProcessor {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "+ path - " + path);
 
         try {
-            FileObject resource = filer.getResource(StandardLocation.SOURCE_PATH,"", path);
+            FileObject resource = filer.getResource(StandardLocation.SOURCE_PATH, "", path);
             if (resource != null && new File(resource.getName()).exists()) {
                 return resource.getCharContent(false);
             }
@@ -318,71 +341,6 @@ public class Generator extends AbstractProcessor {
             throw new IllegalStateException("Failed to find resource " + path);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read resource " + path, e);
-        }
-    }
-
-    private static class Component {
-
-        private Element classElement;
-
-        private String className;
-
-        private String tagName;
-
-        private String templateUrl;
-
-        public String getTagName() {
-
-            return tagName;
-
-        }
-
-        public void setTagName(String tagName) {
-            this.tagName = tagName;
-        }
-
-        public String getTemplateUrl() {
-            return templateUrl;
-        }
-
-        public void setTemplateUrl(String templateUrl) {
-            this.templateUrl = templateUrl;
-        }
-
-        public String getClassName() {
-            return className;
-        }
-
-        public void setClassName(String className) {
-
-            this.className = className;
-
-        }
-
-        public Element getClassElement() {
-            return classElement;
-        }
-
-        public void setClassElement(Element classElement) {
-            this.classElement = classElement;
-        }
-
-        @Override
-        public String toString() {
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.append("{");
-
-            stringBuilder.append("className=").append(className).append(",");
-
-            stringBuilder.append("tagName=").append(tagName).append(",");
-
-            stringBuilder.append("templateUrl=").append(templateUrl);
-
-            stringBuilder.append("}");
-
-            return stringBuilder.toString();
         }
     }
 
