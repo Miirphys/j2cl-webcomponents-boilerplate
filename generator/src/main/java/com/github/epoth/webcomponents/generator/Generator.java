@@ -183,7 +183,7 @@ public class Generator extends AbstractProcessor {
 
     private void retrieveTemplate(CodeBlock.Builder codeBuilder, Component component) {
 
-        if (component.templateUrl != null || component.templateUrl.trim().equals("")) {
+        if (component.templateUrl != null && !component.templateUrl.trim().equals("")) {
 
             StringBuilder templatePathBuilder = new StringBuilder();
 

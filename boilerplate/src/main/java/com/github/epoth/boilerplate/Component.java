@@ -32,6 +32,8 @@ public abstract class Component extends HTMLElement {
 
     private static HTMLTemplateElement __htmlTemplateElement;
 
+    private static ComponentBinder __componentBinder;
+
     public static final int OPEN = 0;
     public static final int CLOSED = 1;
     public static final int NON_SHADOWED = 2;
@@ -95,9 +97,17 @@ public abstract class Component extends HTMLElement {
 
         }
 
-        ComponentBinder binder = ComponentBinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
+        if (__componentBinder == null) {
 
-        binder.bind(this);
+            __componentBinder = ComponentBinderRegistry.get(this.getClass().getSimpleName().toLowerCase());
+
+        }
+
+        if (__componentBinder != null) {
+
+            __componentBinder.bind(this);
+
+        }
 
     }
 

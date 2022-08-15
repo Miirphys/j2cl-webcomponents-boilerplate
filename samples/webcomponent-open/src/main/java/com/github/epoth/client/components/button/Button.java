@@ -30,8 +30,6 @@ import jsinterop.annotations.JsType;
 )
 public class Button extends Component {
 
-    public HTMLElement label;
-
     public Button() {
 
         super(Component.OPEN);
@@ -43,8 +41,6 @@ public class Button extends Component {
         if (this.parentElement.getAttribute("onclick") != null) {
 
             this.parentElement.onclick.onInvoke(ev);
-
-            this.label.innerHTML = "Clicked";
 
         }
 
