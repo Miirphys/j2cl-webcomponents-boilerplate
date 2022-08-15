@@ -5,25 +5,19 @@
     <meta content="text/html; charset=UTF-8" http-equiv="content-type">
     <script language="javascript" src="samples.js"></script>
     <style>
-        section {
-            background: transparent;
-            color: white;
-            border-radius: 1em;
-            border: 1px dotted;
-            padding: 1em;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-right: -50%;
-            transform: translate(-50%, -50%);
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height:100%;
         }
+
     </style>
 </head>
 <body>
-<section>
+<div>
     <m-button>My accessible button</m-button>
-    <p>&nbsp;</p>
     <m-button onclick="window.alert('clicked')">Click Me</m-button>
-</section>
+</div>
 </body>
 </html>

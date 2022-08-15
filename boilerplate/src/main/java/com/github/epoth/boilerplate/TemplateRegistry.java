@@ -1,5 +1,6 @@
 package com.github.epoth.boilerplate;
 
+import elemental2.core.JsMap;
 import elemental2.dom.HTMLTemplateElement;
 
 import java.util.HashMap;
@@ -23,11 +24,11 @@ import java.util.Map;
 
 public class TemplateRegistry {
 
-    private static Map<String, HTMLTemplateElement> registry = new HashMap<>();
+    private static JsMap<String, HTMLTemplateElement> registry = new JsMap<>();
 
     public static void add(String key, HTMLTemplateElement htmlTemplateElement) {
 
-        registry.put(key, htmlTemplateElement);
+        registry.set(key, htmlTemplateElement);
 
     }
 

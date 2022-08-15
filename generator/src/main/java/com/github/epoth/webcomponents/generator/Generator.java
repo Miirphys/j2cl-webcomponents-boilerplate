@@ -17,7 +17,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
-import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +27,11 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.github.epoth.webcomponents.generator.ClassNameUtils.packagePath;
 import static com.github.epoth.webcomponents.generator.ClassNameUtils.lowerCaseClassName;
+import static com.github.epoth.webcomponents.generator.ClassNameUtils.packagePath;
 
 
 /**
@@ -60,6 +58,7 @@ public class Generator extends AbstractProcessor {
     private static final String HTML_TEMPLATE_ELEMENT_SET_INNER = "$L_template.innerHTML=$S";
     private static final String HTML_TEMPLATE_BIND_TO_HEAD = "elemental2.dom.DomGlobal.document.head.append($L_template)";
     private static final String HTML_TEMPLATE_REGISTRY_ADD = "com.github.epoth.boilerplate.TemplateRegistry.add($S,$L_template)";
+
     private TemplateParser templateParser;
     private ArrayList<Component> components = new ArrayList<>();
 
@@ -99,20 +98,20 @@ public class Generator extends AbstractProcessor {
 
         /* */
 
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "generating declarations for " + classes.size() + " components ");
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "* generating declarations for " + classes.size() + " components ");
 
         /* */
 
         StringBuilder nativeBootstrapBuilder = new StringBuilder();
 
         nativeBootstrapBuilder.append(" setTimeout( function() { ");
-        nativeBootstrapBuilder.append(" var ep = Module.$create__();");
+        nativeBootstrapBuilder.append(" var ep = Boot.$create__();");
         nativeBootstrapBuilder.append(" ep.m_onLoad__();");
         nativeBootstrapBuilder.append(" }, 0); ");
 
         /* */
 
-        TypeSpec.Builder classBuilder = TypeSpec.classBuilder("Module").addModifiers(Modifier.PUBLIC);
+        TypeSpec.Builder classBuilder = TypeSpec.classBuilder("Boot").addModifiers(Modifier.PUBLIC);
 
         /* */
 
@@ -160,7 +159,7 @@ public class Generator extends AbstractProcessor {
 
                     StandardLocation.SOURCE_OUTPUT,
 
-                    "", "com/boilerplate/boot/Module.native.js"
+                    "", "com/boilerplate/boot/Boot.native.js"
 
             );
 
@@ -293,16 +292,15 @@ public class Generator extends AbstractProcessor {
     }
 
     private CharSequence getStringContentsOfPath(Filer filer, String path) throws IOException {
-        for (JavaFileManager.Location location : Arrays.asList(StandardLocation.SOURCE_PATH, StandardLocation.SOURCE_OUTPUT, StandardLocation.CLASS_PATH, StandardLocation.CLASS_OUTPUT, StandardLocation.ANNOTATION_PROCESSOR_PATH)) {
-            try {
-                FileObject resource = filer.getResource(location, "", path);
-                if (resource != null && new File(resource.getName()).exists()) {
-                    return resource.getCharContent(false);
-                }
-            } catch (IOException e) {
-                //ignore, look in the next entry
+        try {
+            FileObject resource = filer.getResource(StandardLocation.SOURCE_PATH,"", path);
+            if (resource != null && new File(resource.getName()).exists()) {
+                return resource.getCharContent(false);
             }
+        } catch (IOException e) {
+            //ignore, look in the next entry
         }
+
         try (InputStream inputStream = getClass().getResourceAsStream("/" + path)) {
             if (inputStream != null) {
                 final char[] buffer = new char[1024];

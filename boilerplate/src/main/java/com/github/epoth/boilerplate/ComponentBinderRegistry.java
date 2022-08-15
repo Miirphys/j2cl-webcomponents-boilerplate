@@ -1,5 +1,7 @@
 package com.github.epoth.boilerplate;
 
+import elemental2.core.JsMap;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,11 +23,11 @@ import java.util.Map;
 
 public class ComponentBinderRegistry {
 
-    private static Map<String, ComponentBinder> registry = new HashMap<>();
+    private static JsMap<String, ComponentBinder> registry = new JsMap<>();
 
     public static void add(String key, ComponentBinder eventBinder) {
 
-        registry.put(key, eventBinder);
+        registry.set(key, eventBinder);
 
     }
 
