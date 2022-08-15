@@ -34,7 +34,7 @@ public class Button extends Component {
 
     public Button() {
 
-        super(Component.OPEN);
+        super(Component.CLOSED);
 
     }
 
@@ -43,6 +43,8 @@ public class Button extends Component {
         if (this.parentElement.getAttribute("onclick") != null) {
 
             this.parentElement.onclick.onInvoke(ev);
+
+            this.label.innerHTML = "Clicked";
 
         }
 

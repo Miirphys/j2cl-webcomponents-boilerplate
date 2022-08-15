@@ -1,4 +1,8 @@
 /boilerplate/annotations/target/
 /boilerplate/target/
-/samples/target/
 /generator/target/
+/samples/gwtBuildCache/
+/.idea/
+/samples/webcomponent-field-binding/target/
+/samples/webcomponent-free/target/
+/samples/webcomponent-open/target/

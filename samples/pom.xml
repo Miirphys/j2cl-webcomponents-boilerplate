@@ -10,8 +10,8 @@
     </parent>
 
     <artifactId>samples</artifactId>
-    <version>${project.parent.version}</version>
-    <packaging>jar</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>samples</name>
 
     <properties>
@@ -20,48 +20,12 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.github.gwtboot</groupId>
-            <artifactId>gwt-boot-starters</artifactId>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.google.elemental2</groupId>
-            <artifactId>elemental2-dom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.epoth</groupId>
-            <artifactId>generator</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.epoth</groupId>
-            <artifactId>boilerplate</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>webcomponent-closed</module>
+        <module>webcomponent-open</module>
+        <module>webcomponent-free</module>
+        <module>webcomponent-field-binding</module>
+        <module>webcomponent-observed</module>
+    </modules>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.vertispan.j2cl</groupId>
-                <artifactId>j2cl-maven-plugin</artifactId>
-                <version>0.19</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                        <configuration>
-                            <languageOut>ECMASCRIPT6</languageOut>
-                            <compilationLevel>ADVANCED</compilationLevel>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

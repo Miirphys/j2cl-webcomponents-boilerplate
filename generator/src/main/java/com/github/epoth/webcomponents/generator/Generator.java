@@ -90,8 +90,6 @@ public class Generator extends AbstractProcessor {
 
         if (classes.size() == 0) {
 
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "nothing to do ...");
-
             return false;
 
         }
@@ -269,7 +267,7 @@ public class Generator extends AbstractProcessor {
 
     private void processElement(Element element) {
 
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "+ processing - " + element.toString());
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "+ processing - " + processingEnv.getElementUtils().getPackageOf(element));
 
         WebComponent component = element.getAnnotation(WebComponent.class);
 
@@ -292,6 +290,9 @@ public class Generator extends AbstractProcessor {
     }
 
     private CharSequence getStringContentsOfPath(Filer filer, String path) throws IOException {
+
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "+ path - " + path);
+
         try {
             FileObject resource = filer.getResource(StandardLocation.SOURCE_PATH,"", path);
             if (resource != null && new File(resource.getName()).exists()) {
