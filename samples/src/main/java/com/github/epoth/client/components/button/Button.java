@@ -38,14 +38,7 @@ public class Button extends Component {
 
     }
 
-    @Override
-    public void onConnect() {
-
-    }
-
     public void onClick(Event ev) {
-
-        // in the case of a component without shadow , the parent tag is the parentElement
 
         if (this.parentElement.getAttribute("onclick") != null) {
 

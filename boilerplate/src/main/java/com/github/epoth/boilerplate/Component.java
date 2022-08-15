@@ -7,6 +7,7 @@ import elemental2.dom.ShadowRoot;
 import jsinterop.annotations.JsType;
 
 import static elemental2.dom.DomGlobal.document;
+import static elemental2.dom.DomGlobal.setTimeout;
 
 
 /**
@@ -27,6 +28,8 @@ import static elemental2.dom.DomGlobal.document;
 
 @JsType
 public abstract class Component extends HTMLElement {
+
+    private static HTMLTemplateElement __htmlTemplateElement;
 
     public static final int OPEN = 0;
     public static final int CLOSED = 1;
@@ -57,21 +60,27 @@ public abstract class Component extends HTMLElement {
 
         }
 
+        setTimeout(o -> initialize(),0);
+
     }
 
-    private void initialize(){
+    private void initialize() {
 
-        HTMLTemplateElement templateElement = TemplateRegistry.get(this.getClass().getSimpleName().toLowerCase());
+        if (__htmlTemplateElement == null) {
 
-        if (templateElement != null) {
+            __htmlTemplateElement = TemplateRegistry.get(this.getClass().getSimpleName().toLowerCase());
+
+        }
+
+        if (__htmlTemplateElement != null) {
 
             if (root != null) {
 
-                root.append(templateElement.content.cloneNode(true));
+                root.appendChild(__htmlTemplateElement.content.cloneNode(true));
 
             } else {
 
-                this.append(templateElement.content.cloneNode(true));
+                this.appendChild(__htmlTemplateElement.content.cloneNode(true));
 
             }
 
@@ -79,11 +88,11 @@ public abstract class Component extends HTMLElement {
 
             if (root != null) {
 
-                root.append(render());
+                root.appendChild(render());
 
             } else {
 
-                this.append(render());
+                this.appendChild(render());
 
             }
         }
@@ -93,16 +102,6 @@ public abstract class Component extends HTMLElement {
         binder.bind(this);
 
     }
-
-    public void connectedCallback() {
-
-        initialize();
-
-        onConnect();
-
-    }
-
-    public void onConnect(){}
 
     public Element render() {
 

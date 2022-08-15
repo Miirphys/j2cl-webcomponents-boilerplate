@@ -147,14 +147,6 @@ public class TemplateParser {
 
                     result.bindingList.add(templateBinding);
 
-                    processingEnvironment.getMessager().printMessage(
-
-                            Diagnostic.Kind.NOTE,
-
-                            "(" + templateBinding.getId() + ") --> " + templateBinding.getFunction());
-
-                    /* */
-
                     element.removeAttr(eventAttributeName);
 
                 }
@@ -163,7 +155,7 @@ public class TemplateParser {
 
         }
 
-        result.parserOutput = document.body().html();
+        result.parserOutput = document.head().html() + document.body().html();
 
         return result;
 
