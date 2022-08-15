@@ -3,7 +3,7 @@ package com.github.epoth.client.components.button;
 import com.github.epoth.boilerplate.Component;
 import com.github.epoth.boilerplate.annotations.WebComponent;
 import elemental2.dom.Event;
-import elemental2.dom.HTMLElement;
+import elemental2.dom.HTMLButtonElement;
 import jsinterop.annotations.JsType;
 
 
@@ -30,7 +30,11 @@ import jsinterop.annotations.JsType;
 )
 public class Button extends Component {
 
-    public HTMLElement label;
+    private static final String raisedStyle = "mdc-button--raised";
+
+    public HTMLButtonElement button;
+
+    private boolean state = true;
 
     public Button() {
 
@@ -40,13 +44,19 @@ public class Button extends Component {
 
     public void onClick(Event ev) {
 
-        if (this.parentElement.getAttribute("onclick") != null) {
+        if (state) {
 
-            this.parentElement.onclick.onInvoke(ev);
+            state = false;
 
-            this.label.innerHTML = "Clicked";
+            button.classList.remove(raisedStyle);
+
+            return;
 
         }
+
+        button.classList.add(raisedStyle);
+
+        state = true;
 
     }
 

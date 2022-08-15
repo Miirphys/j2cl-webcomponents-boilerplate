@@ -2,11 +2,11 @@
 @import "https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css";
 </style>
 <div class="mdc-touch-target-wrapper">
-    <button @click="onClick" class="mdc-button mdc-button--touch">
+    <button @click="onClick" class="mdc-button mdc-button--touch mdc-button--raised" @field="button">
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__touch"></span>
-        <span @field="label" class="mdc-button__label" >
-            <slot select="*"></slot>
+        <span  class="mdc-button__label" >
+            <slot select="*" ></slot>
         </span>
     </button>
 </div>
