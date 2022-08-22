@@ -107,8 +107,6 @@ public abstract class Component extends HTMLElement {
     @JsMethod(name = "attributeChangedCallback")
     public Object attributeChangedCallback(String attributeName, String oldValue, Object newValue, String namespace) {
 
-        console.log( newValue);
-
         __ObservedBinder.onAttributeChange(attributeName,newValue,this);
 
         return super.attributeChangedCallback(attributeName, oldValue, newValue.toString(), namespace);
