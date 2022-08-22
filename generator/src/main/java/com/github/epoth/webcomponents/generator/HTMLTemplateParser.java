@@ -1,6 +1,5 @@
 package com.github.epoth.webcomponents.generator;
 
-import com.github.epoth.boilerplate.TemplateBinding;
 import com.google.common.annotations.GwtIncompatible;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -1,10 +1,9 @@
-package com.github.epoth.client.components.button;
+package com.github.epoth.client.components.grid;
 
 import com.github.epoth.boilerplate.Component;
 import com.github.epoth.boilerplate.annotations.WebComponent;
 import elemental2.dom.Event;
 import jsinterop.annotations.JsType;
-
 
 /**
  * Copyright 2022 Eric Ponthiaux -/- ponthiaux.eric@gmail.com
@@ -24,16 +23,14 @@ import jsinterop.annotations.JsType;
 
 @JsType
 @WebComponent(
-        mode = WebComponent.OPEN,
+        mode = WebComponent.CLOSED,
         tagName = "m-button",
         template = "Button.html"
 )
 public class Button extends Component {
 
     public Button() {
-
         super();
-
     }
 
     public void onClick(Event ev) {

@@ -1,4 +1,6 @@
-package com.github.epoth.boilerplate;
+package com.github.epoth.webcomponents.generator;
+
+import com.google.common.annotations.GwtIncompatible;
 
 /**
  * Copyright 2022 Eric Ponthiaux -/- ponthiaux.eric@gmail.com
@@ -15,6 +17,7 @@ package com.github.epoth.boilerplate;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@GwtIncompatible
 public class TemplateBinding {
 
     public static final int FIELD = 0;

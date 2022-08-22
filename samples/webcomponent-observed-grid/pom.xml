@@ -9,26 +9,26 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>webcomponent-observed</artifactId>
+    <artifactId>webcomponent-observed-grid</artifactId>
     <version>${project.parent.version}</version>
     <packaging>jar</packaging>
-    <name>webcomponent-observed</name>
+
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.gwtboot</groupId>
-            <artifactId>gwt-boot-starters</artifactId>
-            <type>pom</type>
+            <groupId>com.google.elemental2</groupId>
+            <artifactId>elemental2-dom</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.elemental2</groupId>
-            <artifactId>elemental2-dom</artifactId>
+            <artifactId>elemental2-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.epoth</groupId>
@@ -41,6 +41,7 @@
             <artifactId>boilerplate</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -59,7 +60,7 @@
                             <initialScriptFilename>${project.artifactId}/components.js</initialScriptFilename>
                             <gwt3BuildCacheDir>../gwtBuildCache</gwt3BuildCacheDir>
                             <languageOut>ECMASCRIPT6</languageOut>
-                            <compilationLevel>ADVANCED</compilationLevel>
+                            <compilationLevel>SIMPLE</compilationLevel>
                         </configuration>
                     </execution>
                 </executions>

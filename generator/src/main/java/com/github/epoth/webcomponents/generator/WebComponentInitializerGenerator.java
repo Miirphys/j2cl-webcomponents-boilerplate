@@ -56,7 +56,6 @@ public class WebComponentInitializerGenerator {
 
         initializeMethodBuilder.returns(ShadowRoot.class);
 
-
         // generate cast to component type
 
         initializeMethodBuilder.addStatement(
@@ -105,7 +104,7 @@ public class WebComponentInitializerGenerator {
 
         javaFile.writeTo(processingEnvironment.getFiler());
 
-        // add the new generated class to the Binding registry
+        // statically set the generated binder class
 
         codeBuilder.addStatement(
 

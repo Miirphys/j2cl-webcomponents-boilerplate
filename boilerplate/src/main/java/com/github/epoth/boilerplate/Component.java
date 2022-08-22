@@ -5,8 +5,11 @@ import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLTemplateElement;
 import elemental2.dom.Node;
 import elemental2.dom.ShadowRoot;
+import jsinterop.annotations.JsMethod;
+import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
+import static elemental2.dom.DomGlobal.console;
 import static elemental2.dom.DomGlobal.document;
 import static elemental2.dom.DomGlobal.setTimeout;
 
@@ -35,6 +38,7 @@ public abstract class Component extends HTMLElement {
     protected static HTMLTemplateElement __Template;
     protected static WebComponentBinder __Binder;
     protected static WebComponentInitializer __Initializer;
+    protected static WebComponentObservedBinder __ObservedBinder;
 
     private ShadowRoot root;
 
@@ -93,5 +97,21 @@ public abstract class Component extends HTMLElement {
         return this.querySelector("#" + id);
     }
 
+    @JsProperty
+    public static String[] getObservedAttributes() {
+
+        return __ObservedBinder.getObservedAttributes();
+
+    }
+
+    @JsMethod(name = "attributeChangedCallback")
+    public Object attributeChangedCallback(String attributeName, String oldValue, Object newValue, String namespace) {
+
+        console.log( newValue);
+
+        __ObservedBinder.onAttributeChange(attributeName,newValue,this);
+
+        return super.attributeChangedCallback(attributeName, oldValue, newValue.toString(), namespace);
+    }
 
 }

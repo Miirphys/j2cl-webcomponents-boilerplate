@@ -1,10 +1,14 @@
-package com.github.epoth.client.components.button;
+package com.github.epoth.client.components.grid;
 
 import com.github.epoth.boilerplate.Component;
 import com.github.epoth.boilerplate.annotations.WebComponent;
+import elemental2.dom.Element;
 import elemental2.dom.Event;
+import elemental2.dom.HTMLButtonElement;
 import elemental2.dom.HTMLElement;
 import jsinterop.annotations.JsType;
+
+import static elemental2.dom.DomGlobal.document;
 
 
 /**
@@ -25,13 +29,10 @@ import jsinterop.annotations.JsType;
 
 @JsType
 @WebComponent(
-        mode = WebComponent.OPEN,
-        tagName = "m-button",
-        template = "Button.html"
+        mode = WebComponent.FREE,
+        tagName = "m-button"
 )
 public class Button extends Component {
-
-    public HTMLElement label;
 
     public Button() {
 
@@ -45,10 +46,27 @@ public class Button extends Component {
 
             this.parentElement.onclick.onInvoke(ev);
 
-            this.label.innerHTML = "Clicked";
-
         }
 
     }
 
+    @Override
+    public Element render() {
+
+        HTMLElement touchTarget = (HTMLElement) document.createElement("div");
+        touchTarget.className = "mdc-touch-target-wrapper";
+
+        HTMLButtonElement mdcButton = (HTMLButtonElement) document.createElement("button");
+        mdcButton.className = "mdc-button mdc-button--touch mdc-button--raised";
+        mdcButton.addEventListener("click", this::onClick);
+
+        HTMLElement buttonLabel = (HTMLElement) document.createElement("span");
+        buttonLabel.innerHTML = "Click Me";
+
+        touchTarget.appendChild(mdcButton);
+        mdcButton.appendChild(buttonLabel);
+
+        return touchTarget;
+
+    }
 }

@@ -2,7 +2,6 @@ package com.github.epoth.webcomponents.generator;
 
 import com.github.epoth.boilerplate.Component;
 import com.github.epoth.boilerplate.WebComponentBinder;
-import com.github.epoth.boilerplate.TemplateBinding;
 import com.google.common.annotations.GwtIncompatible;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
@@ -141,7 +140,7 @@ public class WebComponentBinderGenerator {
 
         javaFile.writeTo(processingEnvironment.getFiler());
 
-        // add the new generated class to the Binding registry
+        // statically set the generated binder class
 
         codeBuilder.addStatement(
 

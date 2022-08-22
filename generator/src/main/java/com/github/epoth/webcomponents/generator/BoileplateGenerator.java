@@ -1,6 +1,7 @@
 package com.github.epoth.webcomponents.generator;
 
 import com.github.epoth.boilerplate.annotations.WebComponent;
+import com.github.epoth.webcomponents.generator.observed.WebComponentObservedBinderGenerator;
 import com.google.common.annotations.GwtIncompatible;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
@@ -51,7 +52,7 @@ import static com.github.epoth.webcomponents.generator.ClassNameUtils.packagePat
  */
 @GwtIncompatible
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class Generator extends AbstractProcessor {
+public class BoileplateGenerator extends AbstractProcessor {
 
     private static final String DEFINE_COMPONENT_PATTERN = "elemental2.dom.DomGlobal.customElements.define($S,$L.class)";
     private static final String HTML_TEMPLATE_ELEMENT_CREATION = "elemental2.dom.HTMLTemplateElement $L_template = (elemental2.dom.HTMLTemplateElement) elemental2.dom.DomGlobal.document.createElement(\"template\")";
@@ -62,6 +63,8 @@ public class Generator extends AbstractProcessor {
     private HTMLTemplateParser templateParser;
 
     private WebComponentInitializerGenerator componentInitializerGenerator;
+
+    private WebComponentObservedBinderGenerator webComponentObservedBinderGenerator;
 
     private ArrayList<ComponentDefinition> components = new ArrayList<>();
 
@@ -81,10 +84,6 @@ public class Generator extends AbstractProcessor {
 
     ) {
 
-        templateParser = new HTMLTemplateParser();
-
-        componentInitializerGenerator = new WebComponentInitializerGenerator();
-
         Set<? extends Element> classes = roundEnv.getElementsAnnotatedWith(WebComponent.class);
 
         for (Element element : classes) {
@@ -98,6 +97,15 @@ public class Generator extends AbstractProcessor {
             return false;
 
         }
+
+        /* */
+
+        templateParser = new HTMLTemplateParser();
+
+        componentInitializerGenerator = new WebComponentInitializerGenerator();
+
+        webComponentObservedBinderGenerator = new WebComponentObservedBinderGenerator();
+
 
         /* */
 
@@ -135,6 +143,24 @@ public class Generator extends AbstractProcessor {
             try {
 
                 componentInitializerGenerator.generate(
+
+                        processingEnv,
+
+                        component,
+
+                        staticCodeBlockBuilder
+
+                );
+
+            } catch (IOException ioException) {
+
+                throw new RuntimeException(ioException);
+
+            }
+
+            try {
+
+                webComponentObservedBinderGenerator.generate(
 
                         processingEnv,
 

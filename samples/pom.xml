@@ -25,7 +25,7 @@
         <module>webcomponent-open</module>
         <module>webcomponent-template-free</module>
         <module>webcomponent-field-binding</module>
-        <module>webcomponent-observed</module>
+        <module>webcomponent-observed-grid</module>
     </modules>
 
 </project>
