@@ -13,7 +13,6 @@ import static elemental2.dom.DomGlobal.console;
 import static elemental2.dom.DomGlobal.document;
 import static elemental2.dom.DomGlobal.setTimeout;
 
-
 /**
  * Copyright 2022 Eric Ponthiaux -/- ponthiaux.eric@gmail.com
  * <p>

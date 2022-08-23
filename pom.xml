@@ -80,9 +80,7 @@
                 <checksumPolicy>fail</checksumPolicy>
             </snapshots>
         </repository>
-
     </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>vertispan-snapshots</id>
@@ -95,10 +93,8 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
     <modules>
         <module>boilerplate</module>
         <module>generator</module>
     </modules>
-
 </project>

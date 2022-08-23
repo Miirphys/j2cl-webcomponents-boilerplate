@@ -55,7 +55,7 @@ public class WebComponentBinderGenerator {
 
         StringBuilder binderClassNameBuilder = new StringBuilder();
 
-        binderClassNameBuilder.append(simpleClassName).append("Binder$");
+        binderClassNameBuilder.append(simpleClassName).append("Binder");
 
         /* */
 

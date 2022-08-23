@@ -38,7 +38,7 @@ public class WebComponentInitializerGenerator {
 
         StringBuilder initializerClassNameBuilder = new StringBuilder();
 
-        initializerClassNameBuilder.append(simpleClassName).append("Initializer$");
+        initializerClassNameBuilder.append(simpleClassName).append("Initializer");
 
         /* */
 

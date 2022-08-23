@@ -114,7 +114,7 @@ public class WebComponentObservedBinderGenerator {
 
         StringBuilder binderClassNameBuilder = new StringBuilder();
 
-        binderClassNameBuilder.append(simpleClassName).append("ObservedBinder$");
+        binderClassNameBuilder.append(simpleClassName).append("ObservedBinder");
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(binderClassNameBuilder.toString()).addModifiers(Modifier.PUBLIC);
 
